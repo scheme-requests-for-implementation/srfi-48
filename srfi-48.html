@@ -17,12 +17,11 @@ Ken Dickey
 <H1>Status</H1> 
 
 This SRFI is currently in ``final'' status.  To see an explanation of each status that a
-SRFI can hold, see <A HREF="http://srfi.schemers.org/srfi-process.html">here</A>.  It will
-remain in draft status until 2004/02/25, or as amended.
-
-To provide input on this SRFI, please <code><A HREF="mailto:srfi-48@srfi.schemers.org">mail to &lt;srfi-48@srfi.schemers.org&gt;</A></code>.
-See <A HREF="../srfi-list-subscribe.html">instructions here</A> to subscribe to the list.  You can access
-previous messages via <A HREF="mail-archive/maillist.html">the archive of the mailing list</A>.
+SRFI can hold, see <a href="http://srfi.schemers.org/srfi-process.html">here</a>.  
+You can access
+previous messages via
+<a href="http://srfi.schemers.org/srfi-48/mail-archive/maillist.html">
+the archive of the mailing list</a>.
 
     <p><ul>
       <li>Received: 2003/11/24</li>
@@ -356,6 +355,11 @@ OPTION	[MNEMONIC]	DESCRIPTION	-- This implementation Assumes ASCII Text Encoding
 (format "~8,3F" "foo")
 ; =&gt; "     foo"
 
+(format "~a~a~&" (list->string (list #\newline)) "")
+; =&gt;
+"
+"
+
 </pre>
     
 
@@ -368,6 +372,7 @@ OPTION	[MNEMONIC]	DESCRIPTION	-- This implementation Assumes ASCII Text Encoding
      
 
 <pre>
+
 ;; IMPLEMENTATION DEPENDENT options
 
 (define ascii-tab   (integer->char  9))  ;; NB: assumes ASCII encoding
@@ -375,11 +380,10 @@ OPTION	[MNEMONIC]	DESCRIPTION	-- This implementation Assumes ASCII Text Encoding
 ;;(define DONT-PRINT (string->symbol ""))
 ;;(define DONT-PRINT (void))
 (define pretty-print   write) ; ugly but permitted
-;;(require 'srfi-38)  ;; write-with-shared-structure
+;; ( require 'srfi-38)  ;; write-with-shared-structure
 
 
 ;; FORMAT
-
 (define (format . args)
   (cond
    ((null? args)
@@ -482,7 +486,6 @@ OPTION	[MNEMONIC]	DESCRIPTION	-- This implementation Assumes ASCII Text Encoding
                               (substring rounded-string (+ dot-index 1) length))
                           )
                        )
-;;                 (format #t "~%@@DEBUG: str=~s: pre=~s frac=~s exp=~s" rounded-string pre-string frac-string exp-string)
                    (string-grow
                     (string-append pre-string
                                    (if dot-index "" ".")
@@ -501,7 +504,7 @@ OPTION	[MNEMONIC]	DESCRIPTION	-- This implementation Assumes ASCII Text Encoding
 
          (define documentation-string
 "(format [<port>] <format-string> [<arg>...]) -- <port> is #t, #f or an output-port
-OPTION	[MNEMONIC]	DESCRIPTION	-- This implementation Assumes ASCII Text Encoding
+OPTION	[MNEMONIC]	DESCRIPTION	-- Implementation Assumes ASCII Text Encoding
 ~H	[Help]		output this text
 ~A	[Any]		(display arg) for humans
 ~S	[Slashified]	(write arg) for parsers
@@ -518,7 +521,7 @@ OPTION	[MNEMONIC]	DESCRIPTION	-- This implementation Assumes ASCII Text Encoding
 ~C	[Character]	charater arg is output by write-char
 ~_	[Space]		a single space character is output
 ~Y	[Yuppify]	the list arg is pretty-printed to the output
-~?	[Indirection]	recursive format: next arg is a format-string and the following arg a list of arguments
+~?	[Indirection]	recursive format: next 2 args are format-string and list of arguments
 ~K	[Indirection]	same as ~?
 "
 	  )
@@ -543,6 +546,16 @@ OPTION	[MNEMONIC]	DESCRIPTION	-- This implementation Assumes ASCII Text Encoding
                     ))        
              )) ; end anychar-dispatch
 
+             (has-newline?
+              (lambda (whatever last-was-newline)
+                (or (eqv? whatever #\newline)
+                    (and (string? whatever)
+                         (let ( (len (string-length whatever)) )
+                           (if (zero? len)
+                               last-was-newline
+                               (eq? #\newline (string-ref whatever (- len 1)))))))
+              )) ; end has-newline?
+             
              (tilde-dispatch          
               (lambda (pos arglist last-was-newline)     
                 (cond           
@@ -555,17 +568,23 @@ OPTION	[MNEMONIC]	DESCRIPTION	-- This implementation Assumes ASCII Text Encoding
                     ((#\A)       ; Any -- for humans 
                      (let ( (whatever (car arglist)) )
                        (display whatever port)
-                       (anychar-dispatch (+ pos 1) (cdr arglist) (eqv? whatever #\newline))
+                       (anychar-dispatch (+ pos 1) 
+                                         (cdr arglist) 
+                                         (has-newline? whatever last-was-newline))
                      ))
                     ((#\S)       ; Slashified -- for parsers  
                      (let ( (whatever (car arglist)) )
                         (write whatever port)     
-                        (anychar-dispatch (+ pos 1) (cdr arglist) (eqv? whatever #\newline)) 
+                        (anychar-dispatch (+ pos 1) 
+                                          (cdr arglist) 
+                                          (has-newline? whatever last-was-newline)) 
                      ))
                     ((#\W)
                      (let ( (whatever (car arglist)) )
                         (write-with-shared-structure whatever port)  ;; srfi-38
-                        (anychar-dispatch (+ pos 1) (cdr arglist) (eqv? whatever #\newline))
+                        (anychar-dispatch (+ pos 1) 
+                                          (cdr arglist) 
+                                          (has-newline? whatever last-was-newline))
                      ))                           
                     ((#\D)       ; Decimal
                      (display (number->string (car arglist) 10) port)  
@@ -605,7 +624,7 @@ OPTION	[MNEMONIC]	DESCRIPTION	-- This implementation Assumes ASCII Text Encoding
                      (anychar-dispatch (+ pos 1) arglist #f)
                      )             
                     ((#\T)       ; Tab -- IMPLEMENTATION DEPENDENT ENCODING    
-                     (write-char ASCII-TAB port)          
+                     (write-char ascii-tab port)          
                      (anychar-dispatch (+ pos 1) arglist #f)     
                      )             
                     ((#\Y)       ; Pretty-print
@@ -678,7 +697,7 @@ OPTION	[MNEMONIC]	DESCRIPTION	-- This implementation Assumes ASCII Text Encoding
                      (anychar-dispatch (+ pos 1) arglist #t)
                      )
                     (else                
-                     (error (format "FORMAT: unknown tilde directive: ~s"
+                     (error (format "FORMAT: unknown tilde escape: ~s"
                                     (string-ref format-strg pos))))
                     )))
                 )) ; end tilde-dispatch   
