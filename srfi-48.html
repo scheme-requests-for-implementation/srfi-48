@@ -414,9 +414,16 @@ OPTION	[MNEMONIC]	DESCRIPTION	-- This implementation Assumes ASCII Text Encoding
                  )        
              )  
 
-         (define (round* n scale) ;; assert scale < 0
-           (let ( (one (expt 10 (- scale))) )
-             (/ (round (* n one)) one)))
+	 (define (point-five? n)
+           (let ( (absn (abs n)) )
+             (= 0.5 (- absn (truncate absn)))))
+
+         (define (round* n scale) ;; assert scale <= 0
+           (if (and (zero? scale) (point-five? n))
+               ;; undo Scheme's "round to even when halfway" rule for *.5
+               ((if (< n 0) - +) (truncate n) 1)
+               (let ( (one (expt 10 (- scale))) )
+                 (/ (round (* n one)) one))))
 
          (define (string-index str c)
            (let ( (len (string-length str)) )
