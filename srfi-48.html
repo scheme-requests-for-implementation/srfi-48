@@ -1,0 +1,438 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<html>
+  <head>
+    <title>SRFI 48: Intermediate Format Strings</title>
+  </head>
+
+  <body>
+
+<H1>Title</H1>
+
+Intermediate Format Strings
+
+<H1>Author</H1>
+
+Ken Dickey
+
+<H1>Status</H1> 
+
+This SRFI is currently in ``draft'' status.  To see an explanation of each status that a
+SRFI can hold, see <A HREF="http://srfi.schemers.org/srfi-process.html">here</A>.  It will
+remain in draft status until 2004/02/25, or as amended.
+
+To provide input on this SRFI, please <code><A HREF="mailto:srfi-48@srfi.schemers.org">mail to &lt;srfi-48@srfi.schemers.org&gt;</A></code>.
+See <A HREF="../srfi-list-subscribe.html">instructions here</A> to subscribe to the list.  You can access
+previous messages via <A HREF="mail-archive/maillist.html">the archive of the mailing list</A>.
+
+    <p><ul>
+      <li>Received: 2003/11/24</li>
+      <li>Draft: 2003/11/25-2004/02/25</li>
+      </ul></p>
+
+<H1>Abstract</H1>
+
+This document specifies Format Strings, a method of interpreting a Scheme string which contains a 
+number of escape sequences that are replaced with other string data according to the semantics of each sequence.
+This SRFI extends <a href="../srfi-28/srfi-28.html">SRFI-28</a> in being more generally useful but is less general than
+advanced format strings in that it does not allow for controlled positioning of text within fields.
+
+<H1>Issues</H1>
+
+Some may disagree with specific escape options or return values.  For those who desire complex options as
+implemented by SLIB or Common Lisp's FORMAT, an upwards compatible "Advanced Format" SRFI should be proposed.
+
+In particular, the reference implementation given here does not accept numeric arguments hence it
+does <b>not</b> support <a href="../srfi-29/srfi-29.html">SRFI-29</a>.
+
+<H1>Rationale</H1>
+
+Almost all Scheme implementations implement or support this level of FORMAT functionality.  
+The reference implementation is R5RS compliant and easy to port.
+By agreeing to this intermediate level of format, we raise the bar for portable code.  
+In not requiring advanced features small implementations are possible. 
+E.g. the reference code does not use side effects (assignment) and is roughly a tenth the source size of 
+the latest SLIB implementation of FORMAT.
+
+The optional <i>port</i> argument allows for compatibility with older code written for, e.g. scheme48, 
+MIT Scheme, T, et cetera, which required a port argument.  It is also useful in cases where a synoptic
+implementation of Scheme and CommonLisp is maintained.
+
+<H1>Specification</H1>
+
+    <b><tt>format</tt></b> <tt><i>[port] format-string [obj ...]</i> </tt>
+
+    <blockquote><br>
+      <p>Accepts a message template (a Scheme String), and
+      processes it, replacing any escape sequences in order with
+      one or more characters, the characters themselves dependent
+      on the semantics of the escape sequence encountered.  Each escape
+      may consume one obj. It is an error if fewer obj values are
+      provided than escape sequences that require them.</p>
+      
+      <p>When a <i>port</i> is specified it must be either an output port or 
+      a boolean.  If an output-port is specified, the formatted output is
+      output into that port.  If the port argument is #t, output is to the
+      current-output-port.  If the port is #f or no port is specified, the
+      output is returned as a string.  If the port is specified and is #t 
+      or an output-port, the result of the format function is unspecified.</p>
+      
+      <p>It is unspecified which encoding is used (e.g. ASCII, EBCDIC, UNICODE).  
+      A given implementation must specify which encoding is used.  
+      The implementation may or may not allow the encoding to be selected or changed.</p>
+      
+      <p>It is an error if an escape sequence consumes an <i>obj</i> argument and that argument does not
+      confirm to a required type as noted in the table below.</p>
+      
+      <p>It is permissible, but discouraged, to implement pretty-print as
+      <i>(define pretty-print display)</i>.</p>
+
+      <p>An escape sequence is a two character sequence in the
+      string where the first character is a tilde '~'. Each escape
+      code's meaning is described in the following table:</p>
+      
+      <table>
+<tr>
+<td><b>ESCAPE</b></td>
+<td><b>MNEMONIC</b></td>
+<td><b>ACTION</b></td>
+<td><b>CONSUMES?</b><td>
+</tr>
+<tr>
+<td>~a</td>
+<td>Any</td>
+<td>(display obj) for humans</td>
+<td>yes</td>
+</tr>
+<tr>
+	<td>~s</td>
+	<td>Slashified</td>
+	<td>(write obj) for parsers</td>
+	<td>yes</td>
+</tr>
+<tr>
+	<td>~~</td>
+	<td>Tilde</td>
+	<td>output a tilde</td>
+	<td>no</td>
+</tr>
+<tr>
+	<td>~t</td>
+	<td>Tab</td>
+	<td>output a tab character</td>
+	<td>no</td>
+</tr>
+<tr>
+	<td>~%</td>
+	<td>Newline</td>
+	<td>output a newline character</td>
+	<td>no</td>
+</tr>
+<tr>
+	<td>~&</td>
+	<td>Freshline</td>
+	<td>output a newline character if it is known that the previous output was not a newline</td>
+	<td>no</td>
+</tr>
+	
+<tr>
+	<td>~d</td>
+	<td>Decimal</td>
+	<td>the obj is a number which is output in decimal radix</td>
+	<td>yes</td>
+</tr>
+<tr>
+	<td>~x</td>
+	<td>heXadecimal</td>
+	<td>the obj is a number which is output in hexdecimal radix</td>
+	<td>yes</td>
+</tr>
+<tr>
+	<td>~o</td>
+	<td>Octal</td>
+	<td>the obj is a number which is output in octal radix</td>
+	<td>yes</td>
+</tr>
+<tr>
+	<td>~b</td>
+	<td>Binary</td>
+	<td>the obj is a number which is output in binary radix</td>
+	<td>yes</td>
+</tr>
+<tr>
+	<td>~p</td>
+	<td>Plural</td>
+	<td>if the number obj is greater (>) than 1, a lower case 's' is printed.</td>
+	<td>yes</td>
+</tr>
+<tr>
+	<td>~c</td>
+	<td>Character</td>
+	<td>the single charater obj is output</td>
+	<td>yes</td>
+</tr>
+<tr>
+	<td>~_</td>
+	<td>Space</td>
+	<td>a single space character is output</td>
+	<td>no</td>
+</tr>
+<tr>
+	<td>~y</td>
+	<td>Yuppify</td>
+	<td>the list obj is pretty-printed to the output</td>
+	<td>yes</td>
+</tr>
+<tr>
+	<td>~?</td>
+	<td>Indirection</td>
+	<td>the obj is another format-string and processed in place as if it were part of
+	the original format-string</td>
+	<td>yes</td>
+</tr>
+<tr>
+	<td>~K</td>
+	<td>Indirection</td>
+	<td>this is an alias for ~? for backward compatability with some existing implementations</td>
+	<td>yes</td>
+</tr>
+	</table>
+
+ 
+    </blockquote>
+
+    <h2>Examples</h2>
+<pre>
+(format "Hello, ~a" "World!")
+; =&gt; "Hello, World!"
+
+(format "Error, list is too short: ~s~%" '(one "two" 3))
+; =&gt; "Error, list is too short: (one \"two\" 3))"
+
+(format "test me")
+; =&gt; "test me"
+
+(format "~a ~s ~a ~s" 'this 'is "a" "test")
+; =&gt; "this is a \"test\""
+
+(format #t "#d~d #x~x #o~o #b~b~%" 32 32 32 32)
+;; Prints:   #d32 #x20 #o40 #b100000
+; =&gt; no-value
+
+(format "~a ~? ~a" 'a "~s" 'new 'test)
+; =&gt;"a new test"
+
+(format #f "~&1~&~&2~&~&~&3~%")
+; =&gt; 
+"
+1
+2
+3
+"
+
+(format "suck~p less~p" 3 1)
+; =&gt; "sucks less"
+</pre>
+    
+
+
+<H1>Implementation</H1>
+
+    The implementation below requires SRFI-6 (Basic string ports)
+    and SRFI-23 (Error reporting mechanism). <br>
+     
+
+<pre>
+
+;; IMPLEMENTATION DEPENDENT options
+
+(define ascii-tab   (integer->char  9))  ;; Assume ASCII encoding
+(define dont-print  (if (eq? #t #f) 1))  ;; Unspecified result
+;;(define DONT-PRINT (string->symbol ""))
+;;(define DONT-PRINT (void))
+(define pretty-print display)  ;; Ugly, but permitted
+
+;; FORMAT
+
+(define (format . args)
+  (cond
+   ((null? args)
+    (error "FORMAT: required format-string argument is missing")
+    )
+   ((string? (car args))
+    (apply format (cons #f args)))
+   ((< (length args) 2)
+    (error (format #f "FORMAT: too few arguments ~a" (cons 'format args)))
+    )
+   (else
+    (let ( (output-port   (car  args))
+           (format-string (cadr args))
+           (args          (cddr args))
+         )
+      (letrec ( (port 
+                 (cond ((output-port? output-port) output-port)
+                       ((eq? output-port #t) (current-output-port)) 
+                       ((eq? output-port #f) (open-output-string)) 
+                       (else (error
+                              (format #f "FORMAT: bad output-port argument: ~s"
+                                      output-port)))
+                ) )
+                (return-value 
+                 (if (eq? output-port #f)    ;; if format into a string 
+                     (lambda () (get-output-string port)) ;; then return the string
+                     (lambda () dont-print)) ;; else do something harmless
+                 )        
+             )  
+        
+        (define (format-help format-strg arglist)
+          
+          (letrec ( 
+
+             (length-of-format-string (string-length format-strg))
+             
+             (anychar-dispatch       
+              (lambda (pos arglist last-was-newline) 
+                (if (>= pos length-of-format-string) 
+                  arglist ; used for ~? continuance 
+                  (let ( (char (string-ref format-strg pos)) ) 
+                    (cond            
+                     ((eq? char #\~)   
+                      (tilde-dispatch (+ pos 1) arglist last-was-newline)) 
+                     (else                   
+                      (write-char char port)     
+                      (anychar-dispatch (+ pos 1) arglist #f)        
+                      ))               
+                    ))        
+             )) ; end anychar-dispatch   
+           
+             (tilde-dispatch          
+              (lambda (pos arglist last-was-newline)     
+                (cond           
+                 ((>= pos length-of-format-string)   
+                  (write-char #\~ port) ; tilde at end of string is just output
+                  arglist ; used for ~? continuance
+                  )     
+                 (else      
+                  (case (char-upcase (string-ref format-strg pos)) 
+                    ((#\A)       ; Any -- for humans 
+                     (display (car arglist) port)    
+                     (anychar-dispatch (+ pos 1) (cdr arglist) #f) 
+                     )   
+                    ((#\S)       ; Slashified -- for parsers  
+                     (write (car arglist) port)     
+                     (anychar-dispatch (+ pos 1) (cdr arglist) #f) 
+                     )      
+                    ((#\D)       ; Decimal
+                     (display (number->string (car arglist) 10) port)  
+                     (anychar-dispatch (+ pos 1) (cdr arglist) #f)  
+                     )            
+                    ((#\X)       ; HeXadecimal    
+                     (display (number->string (car arglist) 16) port)
+                     (anychar-dispatch (+ pos 1) (cdr arglist) #f)  
+                     )             
+                    ((#\O)       ; Octal   
+                     (display (number->string (car arglist)  8) port) 
+                     (anychar-dispatch (+ pos 1) (cdr arglist) #f) 
+                     )       
+                    ((#\B)       ; Binary
+                     (display (number->string (car arglist)  2) port)
+                     (anychar-dispatch (+ pos 1) (cdr arglist) #f) 
+                     )           
+                    ((#\C)       ; Character 
+                     (write-char (car arglist) port) 
+                     (anychar-dispatch (+ pos 1) (cdr arglist) (eq? (car arglist) #\newline))  
+                     )          
+                    ((#\P)       ; Plural 
+                     (if (<= (car arglist) 1)
+                       #f ; no action  
+                       (write-char #\s port))
+                     (anychar-dispatch (+ pos 1) (cdr arglist) #f) 
+                     )            
+                    ((#\~)       ; Tilde  
+                     (write-char #\~ port)   
+                     (anychar-dispatch (+ pos 1) arglist #f) 
+                     )            
+                    ((#\%)       ; Newline   
+                     (newline port) 
+                     (anychar-dispatch (+ pos 1) arglist #t) 
+                     )
+                    ((#\&)      ; Freshline
+                     (if (not last-was-newline) ;; (unless last-was-newline ..
+                         (newline port))
+                     (anychar-dispatch (+ pos 1) arglist #t)
+                     )
+                    ((#\_)       ; Space 
+                     (write-char #\space port)   
+                     (anychar-dispatch (+ pos 1) arglist #f)
+                     )             
+                    ((#\T)       ; Tab -- IMPLEMENTATION DEPENDENT ENCODING    
+                     (write-char ASCII-TAB port)          
+                     (anychar-dispatch (+ pos 1) arglist #f)     
+                     )             
+                    ((#\Y)       ; Pretty-print
+                     (pretty-print (car arglist) port)  ;; IMPLEMENTATION DEPENDENT
+                     (anychar-dispatch (+ pos 1) (cdr arglist) #f)
+                     )              
+                    ;; {"~?" in Common Lisp is "~K" in T}  
+                    ((#\? #\K)       ; indirection -- take next arg as format string
+                     (anychar-dispatch 
+                      (+ pos 1)        
+                      (format-help (car arglist) (cdr arglist)) ; Note: format-help returns unused args
+                      #f)
+                     )          
+                    (else                
+                     (error (format "FORMAT: unknown tilde escape: ~a"
+                                    (string-ref format-strg pos))))
+                    )))
+                )) ; end tilde-dispatch   
+             ) ; end letrec            
+            
+             ; format-help main      
+             (anychar-dispatch 0 arglist #f) 
+            )) ; end format-help    
+        
+        ; format main    
+        (format-help format-string args)   
+        (return-value)   
+                                              
+      )) ; end letrec, if
+))) ; end format
+
+</pre>
+
+
+<H1>Copyright</H1>
+Copyright (C) Kenneth A Dickey (2003). All Rights Reserved. 
+<p>
+This document and translations of it may be copied and furnished to
+others, and derivative works that comment on or otherwise explain it
+or assist in its implementation may be prepared, copied, published and
+distributed, in whole or in part, without restriction of any kind,
+provided that the above copyright notice and this paragraph are
+included on all such copies and derivative works. However, this
+document itself may not be modified in any way, such as by removing
+the copyright notice or references to the Scheme Request For
+Implementation process or editors, except as needed for the purpose of
+developing SRFIs in which case the procedures for copyrights defined
+in the SRFI process must be followed, or as required to translate it
+into languages other than English.
+<p>
+The limited permissions granted above are perpetual and will not be
+revoked by the authors or their successors or assigns.
+<p>
+This document and the information contained herein is provided on an
+"AS IS" basis and THE AUTHOR AND THE SRFI EDITORS DISCLAIM ALL
+WARRANTIES, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO ANY
+WARRANTY THAT THE USE OF THE INFORMATION HEREIN WILL NOT INFRINGE ANY
+RIGHTS OR ANY IMPLIED WARRANTIES OF MERCHANTABILITY OR FITNESS FOR A
+PARTICULAR PURPOSE.
+
+
+    <hr>
+    <address>Author: <a href="mailto:Ken.Dickey@allvantage.com">Ken Dickey</a></address>
+    <address>Editor: <a href="mailto:srfi-editors@srfi.schemers.org">Francisco Solsona</a></address>
+<!-- Created: Tue Sep 29 19:20:08 EDT 1998 -->
+<!-- hhmts start -->
+Last modified: Tue Nov 25 11:57:47 CST 2003
+<!-- hhmts end -->
+  </body>
+</html>
