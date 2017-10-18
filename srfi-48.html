@@ -460,13 +460,17 @@ OPTION	[MNEMONIC]	DESCRIPTION	-- This implementation Assumes ASCII Text Encoding
                                         (string-append "0." frac-str)))
                                 0)))
                        (new-frac
-                        (substring temp-str 0 digits))
+			(if (> dot-pos digits)
+			    (substring temp-str (- dot-pos digits) dot-pos)
+			    (substring temp-str 0 digits)))
                      )
-                 (string-append
-                  (if carry? (number->string (+ 1 (string->number pre-str))) pre-str)
-                  "."
-                  new-frac
-                  exp-str)))
+		 (let ( (pre-str* (if (string=? pre-str "") "0" pre-str))
+		      )
+		   (string-append
+		    (if carry? (number->string (+ 1 (string->number pre-str*))) pre-str)
+		    "."
+		    new-frac
+		    exp-str))))
          ) ) )
  
          (define (format-fixed number-or-string width digits) ; returns a string
