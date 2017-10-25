@@ -69,28 +69,40 @@
               (else ;; must round to shrink it
                (let* ( (first-part (substring frac-str 0 digits))
                        (last-part  (substring frac-str digits frac-len))
-                       (temp-str
+                       (temp-str*
                         (number->string
-                         (round (string->number
-                                 (string-append first-part "." last-part)))))
-                       (dot-pos (string-index  temp-str #\.))
+                         (inexact->exact
+                          (round (string->number
+                                  (string-append first-part "." last-part))))))
+                       (temp-str
+                        (if (< (string-length temp-str*) digits)
+                            (string-append (make-string
+                                            (- digits (string-length temp-str*))
+                                            #\0)
+                                           temp-str*)
+                            temp-str*))
+                       (dot-pos  (or (string-index  temp-str #\.)
+                                     (string-length temp-str)))
                        (carry?
                         (and (> dot-pos digits)
                              (> (round (string->number
                                         (string-append "0." frac-str)))
                                 0)))
                        (new-frac
-			(if (> dot-pos digits)
-			    (substring temp-str (- dot-pos digits) dot-pos)
-			    (substring temp-str 0 digits)))
+                        (if (> dot-pos digits)
+                            (substring temp-str (- dot-pos digits) dot-pos)
+                            (substring temp-str 0 digits)))
                      )
-		 (let ( (pre-str* (if (string=? pre-str "") "0" pre-str))
-		      )
-		   (string-append
-		    (if carry? (number->string (+ 1 (string->number pre-str*))) pre-str)
-		    "."
-		    new-frac
-		    exp-str))))
+                 (let ( (pre-str* (if (string=? pre-str "") "0" pre-str))
+                      )
+                   (string-append
+                    (if carry?
+                        (let ( (n (string->number pre-str*)) )
+                          (number->string (if (< n 0) (- n 1) (+ n 1))))
+                        pre-str*)
+                    "."
+                    new-frac
+                    exp-str))))
          ) ) )
  
          (define (format-fixed number-or-string width digits) ; returns a string
@@ -326,7 +338,7 @@ OPTION  [MNEMONIC]      DESCRIPTION     -- Implementation Assumes ASCII Text Enc
                                          (cons next-char d-digits)
                                          in-width?))
                                )
-                              ((char=? next-char #\F)
+                              ((or (char=? next-char #\F) (char=? next-char #\f))
                                (let ( (width  (string->number (list->string (reverse w-digits))))
                                       (digits (if (zero? (length d-digits))
                                                   #f
