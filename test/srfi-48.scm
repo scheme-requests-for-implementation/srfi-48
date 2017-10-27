@@ -134,7 +134,7 @@
                            (exp-index
                             (if dot-index
                                 (substring num-str 0 dot-index)
-                                (substring num-str 0 (+ exp-index 1)))
+                                (substring num-str 0 exp-index))
                             )
                            (dot-index
                             (substring num-str 0 dot-index)
@@ -146,18 +146,18 @@
                           (if exp-index (substring num-str exp-index length) "")
                           )
                          (frac-string
-                          (if exp-index
-                              (substring num-str (+ dot-index 1) exp-index)
-                              (substring num-str (+ dot-index 1) length))
+                          (if dot-index
+                              (if exp-index
+                                  (substring num-str (+ dot-index 1) exp-index)
+                                  (substring num-str (+ dot-index 1) length))
+                              "")
                           )
                        )
                    (string-grow
-                    (if dot-index
-                        (compose-with-digits digits
-                                             pre-string
-                                             frac-string
-                                             exp-string)
-                        (string-append pre-string exp-string))
+                    (compose-with-digits digits
+                                         pre-string
+                                         frac-string
+                                         exp-string)
                     width
                     #\space)
                  ))
