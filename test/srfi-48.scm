@@ -8,6 +8,15 @@
 (define pretty-print   write) ; ugly but permitted
 ;; (require 'srfi-38)  ;; write-with-shared-structure
 
+;; Following three procedures are used by format ~F .
+;; 'inexact-number->string' determines whether output is fixed-point
+;; notation or exponential notation. In the current definition,
+;; the notation depends on the implementation of 'number->string'.
+;; 'exact-number->string' is expected not to output exponential notation.
+;; 'real-number->string' is used when the digits of ~F is not specified.
+(define (inexact-number->string x) (number->string (exact->inexact x)))
+(define (exact-number->string x)   (number->string (inexact->exact x)))
+(define (real-number->string x)    (number->string x))
 
 ;; FORMAT
 (define (format . args)
@@ -70,19 +79,18 @@
                (let* ( (first-part (substring frac-str 0 digits))
                        (last-part  (substring frac-str digits frac-len))
                        (temp-str*
-                        (number->string
-                         (inexact->exact
-                          (round (string->number
-                                  (string-append first-part "." last-part))))))
+                        (exact-number->string
+                         (round (string->number
+                                 (string-append first-part "." last-part)))))
+                       (dot-pos* (string-index temp-str* #\.))
                        (temp-str
-                        (if (< (string-length temp-str*) digits)
-                            (string-append (make-string
-                                            (- digits (string-length temp-str*))
-                                            #\0)
-                                           temp-str*)
-                            temp-str*))
-                       (dot-pos  (or (string-index  temp-str #\.)
-                                     (string-length temp-str)))
+                        (string-grow
+                         (if dot-pos*
+                             (substring temp-str* 0 dot-pos*)
+                             temp-str*)
+                         digits
+                         #\0))
+                       (dot-pos  (string-length temp-str))
                        (carry?
                         (and (> dot-pos digits)
                              (> (round (string->number
@@ -93,12 +101,11 @@
                             (substring temp-str (- dot-pos digits) dot-pos)
                             (substring temp-str 0 digits)))
                      )
-                 (let ( (pre-str* (if (string=? pre-str "") "0" pre-str))
-                      )
+                 (let ( (pre-str* (if (string=? pre-str "") "0" pre-str)) )
                    (string-append
                     (if carry?
                         (let ( (n (string->number pre-str*)) )
-                          (number->string (if (< n 0) (- n 1) (+ n 1))))
+                          (exact-number->string (if (< n 0) (- n 1) (+ n 1))))
                         pre-str*)
                     "."
                     new-frac
@@ -125,7 +132,7 @@
                   #\space)
                  )
                 (digits
-                 (let* ( (num-str   (number->string (exact->inexact real)))
+                 (let* ( (num-str   (inexact-number->string real))
                          (dot-index (string-index  num-str #\.))
                          (exp-index (string-index  num-str #\e))
                          (length    (string-length num-str))
@@ -162,7 +169,7 @@
                     #\space)
                  ))
                 (else ;; no digits
-                 (string-grow (number->string real) width #\space)))
+                 (string-grow (real-number->string real) width #\space)))
              ))
             (else
              (error
@@ -338,7 +345,7 @@ OPTION  [MNEMONIC]      DESCRIPTION     -- Implementation Assumes ASCII Text Enc
                                          (cons next-char d-digits)
                                          in-width?))
                                )
-                              ((or (char=? next-char #\F) (char=? next-char #\f))
+                              ((char=? (char-upcase next-char) #\F)
                                (let ( (width  (string->number (list->string (reverse w-digits))))
                                       (digits (if (zero? (length d-digits))
                                                   #f
