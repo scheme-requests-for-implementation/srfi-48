@@ -18,5 +18,7 @@
 
 (include "test-0001")
 
+(test-log "== RESULT ==")
+
 (test-end)
 
