@@ -9,4 +9,8 @@ sash test-Sagittarius.scm
 
 racket test-Racket.scm
 
+gsi test-Gambit.scm
+
+guile --no-auto-compile test-Guile.scm
+
 

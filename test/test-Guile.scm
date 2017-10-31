@@ -1,19 +1,8 @@
-#lang racket
-
 ;;
-;; srfi-48 format test for Racket
+;; srfi-48 format test for Guile
 ;;
 
-(require srfi/38) ; for write-with-shared-structure
-
-(define-syntax if
-  (syntax-rules ()
-    ((_ test then)
-     (when test then))
-    ((_ test then else1)
-     (cond (test then) (else else1)))
-    ((_ . other)
-     (syntax-error "malformed if"))))
+(use-modules (srfi srfi-38)) ; for write-with-shared-structure
 
 (include "srfi-48.scm")
 
@@ -45,7 +34,7 @@
    ((string? x) (string->number x))
    (else (error "x->number error"))))
 
-(include "test-0001-Racket.scm")
+(include "test-0001.scm")
 
 (display "== RESULT ==") (newline)
 (display (if ok-flag "OK." "FAILED.")) (newline)
