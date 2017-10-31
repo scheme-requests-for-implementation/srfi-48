@@ -62,9 +62,6 @@
                (string-append (make-string off char) str)
                str)))
 
-         (define (string-empty-to-zero str)
-           (if (string=? str "") "0" str))
-
          (define (string-remove-frac-part str)
            (let ( (dot-pos (string-index str #\.)) )
              (if dot-pos
@@ -87,9 +84,9 @@
               (else ;; must round to shrink it
                (let* ( (minus-flag (and (> (string-length pre-str) 0)
                                         (char=? (string-ref pre-str 0) #\-)))
-                       (pre-str* (if minus-flag
-                                     (substring pre-str 1 (string-length pre-str))
-                                     pre-str))
+                       (pre-str*   (if minus-flag
+                                       (substring pre-str 1 (string-length pre-str))
+                                       pre-str))
                        (first-part (substring frac-str 0 digits))
                        (last-part  (substring frac-str digits frac-len))
                        (temp-str
@@ -101,13 +98,21 @@
                          digits
                          #\0))
                        (temp-len   (string-length temp-str))
+                       (new-pre    (substring temp-str 0 (- temp-len digits)))
+                       (new-frac   (substring temp-str (- temp-len digits) temp-len))
                      )
                  (string-append
                   (if minus-flag "-" "")
-                  (string-empty-to-zero
-                   (substring temp-str 0 (- temp-len digits)))
+                  (if (string=? new-pre "")
+                      ;; check if the system displays integer part of numbers
+                      ;; whose absolute value is 0 < x < 1.
+                      (if (and (string=? pre-str* "")
+                               (> digits 0)
+                               (not (= (string->number new-frac) 0)))
+                          "" "0")
+                      new-pre)
                   "."
-                  (substring temp-str (- temp-len digits) temp-len)
+                  new-frac
                   exp-str)))
          ) ) )
  
@@ -136,20 +141,16 @@
                          (exp-index (string-index  num-str #\e))
                          (length    (string-length num-str))
                          (pre-string
-                          (cond
-                           (exp-index
-                            (if dot-index
-                                (substring num-str 0 dot-index)
-                                (substring num-str 0 exp-index))
-                            )
-                           (dot-index
-                            (substring num-str 0 dot-index)
-                            )
-                           (else
-                            num-str))
+                          (if dot-index
+                              (substring num-str 0 dot-index)
+                              (if exp-index
+                                  (substring num-str 0 exp-index)
+                                  num-str))
                           )
                          (exp-string
-                          (if exp-index (substring num-str exp-index length) "")
+                          (if exp-index
+                              (substring num-str exp-index length)
+                              "")
                           )
                          (frac-string
                           (if dot-index

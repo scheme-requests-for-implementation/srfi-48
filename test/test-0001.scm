@@ -1,5 +1,5 @@
 ;;
-;; srfi-48 format test
+;; srfi-48 format test for Gauche, Sagittarius, Guile
 ;;
 
 (define (nearly=? a b)
@@ -88,7 +88,8 @@
 (expect "3  2 2  3 \n" (format #f "~a ~? ~a ~%" 3 " ~s ~s " '(2 2) 3))
 ;; incorrect mutation of literal list in example
 ;(expect "#1=(a b c . #1#)" (format "~w" (let ( (c '(a b c)) ) (set-cdr! (cddr c) c) c)))
-(expect "#0=(a b c . #0#)" (format "~w" (let ( (c (list 'a 'b 'c)) ) (set-cdr! (cddr c) c) c)))
+(expect "#0=(a b c . #0#)" (format "~w" (let ( (c (list 'a 'b 'c)) ) (set-cdr! (cddr c) c) c))
+        (lambda (e r) (or (equal? e r) (equal? "#1=(a b c . #1#)" r))))
 (expect "   32.00"   (format "~8,2F" 32))
 (expect "0.000+1.949i" (format "~8,3F" (sqrt -3.8)))
 ;(expect " 3.45e11"   (format "~8,2F" 3.4567e11))
@@ -208,11 +209,16 @@
 (expect "1.e100"     (format "~1,0F" 1e100))
 (expect "1."         (format "~1,0F" 1))
 (expect "0."         (format "~1,0F" .1))
+(expect "0.0"        (format "~1,1F" .01))
 
 
-(test-section "~F error")
-(expect "<error>" (guard (e (else "<error>")) (format "~-1F" 1)))
-(expect "<error>" (guard (e (else "<error>")) (format "~1,-1F" 1)))
+(cond-expand
+ (guile)
+ (else
+  (test-section "~F error")
+  (expect "<error>" (guard (e (else "<error>")) (format "~-1F" 1)))
+  (expect "<error>" (guard (e (else "<error>")) (format "~1,-1F" 1)))
+  ))
 
 
 (test-section "from mailing list 2004-05-27")
