@@ -141,20 +141,16 @@
                          (exp-index (string-index  num-str #\e))
                          (length    (string-length num-str))
                          (pre-string
-                          (cond
-                           (exp-index
-                            (if dot-index
-                                (substring num-str 0 dot-index)
-                                (substring num-str 0 exp-index))
-                            )
-                           (dot-index
-                            (substring num-str 0 dot-index)
-                            )
-                           (else
-                            num-str))
+                          (if dot-index
+                              (substring num-str 0 dot-index)
+                              (if exp-index
+                                  (substring num-str 0 exp-index)
+                                  num-str))
                           )
                          (exp-string
-                          (if exp-index (substring num-str exp-index length) "")
+                          (if exp-index
+                              (substring num-str exp-index length)
+                              "")
                           )
                          (frac-string
                           (if dot-index
