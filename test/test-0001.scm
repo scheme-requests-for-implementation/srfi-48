@@ -2,12 +2,24 @@
 ;; srfi-48 format test for Gauche, Sagittarius, Guile
 ;;
 
+(cond-expand
+ (gauche)
+ (else
+  (define (x->number x)
+    (cond
+     ((number? x) x)
+     ((string? x) (string->number x))
+     (else (error "x->number error"))))
+  ))
+
 (define (nearly=? a b)
   (let ((a1 (x->number a)) (b1 (x->number b)))
     ;(format #t "(result = ~s, num-e = ~s, num-r = ~s)\n" b a1 b1)
     (< (abs (- a1 b1)) 1.0e-10)))
 
 (define pi 3.141592653589793)
+
+(test-start "srfi-48 format test")
 
 (test-section "original")
 (expect (format "test ~s" 'me) (format #f "test ~a" "me"))
@@ -272,4 +284,5 @@
 (expect "  18.00"    (format "~7,2F" 18.0000000000008))
 (expect "    -15."   (format "~8,0F" -14.99995999999362))
 
+(test-end)
 
