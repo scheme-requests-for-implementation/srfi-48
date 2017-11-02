@@ -1,5 +1,5 @@
 ;;
-;; small test tool for Gauche, Sagittarius, Racket, Gambit, Guile
+;; small test tool for Gauche, Sagittarius, Racket, Gambit, Guile, MIT/GNU Scheme
 ;;
 
 (define *test-total-count*  0)

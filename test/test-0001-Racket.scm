@@ -100,7 +100,7 @@
 (expect "   32.00"   (format "~8,2F" 32))
 (expect "0.000+1.949i" (format "~8,3F" (sqrt -3.8)))
 ;(expect " 3.45e11"   (format "~8,2F" 3.4567e11))
-(expect "345670000000.00"   (format "~8,2F" 3.4567e11))
+(expect "345670000000.00" (format "~8,2F" 3.4567e11))
 (expect " 0.333"     (format "~6,3F" 1/3))
 (expect "  12"       (format "~4F" 12))
 (expect " 123.346"   (format "~8,3F" 123.3456))
