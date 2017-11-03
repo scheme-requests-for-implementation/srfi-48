@@ -17,4 +17,8 @@ mit-scheme --quiet --load test-MIT-Scheme.scm
 # On windows, it seems that MIT/GNU Scheme can't run as a command line tool.
 # So, this test program outputs a result to a file 'test-MIT-Scheme-result.txt'.
 
+scheme --quiet test-ChezScheme.scm
+
+csi -quiet test-Chicken.scm
+
 
