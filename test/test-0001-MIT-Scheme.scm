@@ -9,9 +9,11 @@
    (else (error "x->number error"))))
 
 (define (nearly=? a b)
-  (let ((a1 (x->number a)) (b1 (x->number b)))
-    ;(format #t "(result = ~s, num-e = ~s, num-r = ~s)\n" b a1 b1)
-    (< (abs (- a1 b1)) 1.0e-10)))
+  (let* ((a1 (x->number a))
+         (b1 (x->number b))
+         (e1 (abs (- a1 b1))))
+    ;(format #t "(a1 = ~s, b1 = ~s, e1 = ~s)~%" a1 b1 e1)
+    (< e1 1.0e-10)))
 
 (define pi 3.141592653589793)
 

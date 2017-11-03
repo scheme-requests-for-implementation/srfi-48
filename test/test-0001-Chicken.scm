@@ -1,5 +1,5 @@
 ;;
-;; srfi-48 format test for Racket
+;; srfi-48 format test for Chicken
 ;;
 
 (define (x->number x)
@@ -26,7 +26,7 @@
 (expect "  12.346" (format "~8,3F" 12.3456))
 (expect "123.346" (format "~6,3F" 123.3456))
 (expect "123.346" (format "~4,3F" 123.3456))
-(expect "0.000+1.949i" (format "~8,3F" (sqrt -3.8)))
+;(expect "0.000+1.949i" (format "~8,3F" (sqrt -3.8)))
 (expect " 32.00" (format "~6,2F" 32))
 (expect "    32" (format "~6F" 32))
 ;(expect "   32." (format "~6F" 32.)) ;; "  32.0" OK
@@ -42,8 +42,8 @@
 (expect "      1.2345" (format "~12F" 1.2345))
 (expect "        1.23" (format "~12,2F" 1.2345))
 (expect "       1.234" (format "~12,3F" 1.2345))
-(expect "        0.000+1.949i" (format "~20,3F" (sqrt -3.8)))
-(expect "0.000+1.949i" (format "~8,3F" (sqrt -3.8)))
+;(expect "        0.000+1.949i" (format "~20,3F" (sqrt -3.8)))
+;(expect "0.000+1.949i" (format "~8,3F" (sqrt -3.8)))
 (expect "345670000000.00" (format "~8,2F" 3.4567e11))
 ; (expect "#1=(a b c . #1#)"
 ;         (format "~w" (let ( (c '(a b c)) ) (set-cdr! (cddr c) c) c)))
@@ -84,7 +84,7 @@
 (expect "    32"     (format "~6F" 32))
 (expect "   32.00"   (format "~8,2F" 32))
 (expect "4321.00"    (format "~1,2F" 4321))
-(expect "0.00+1.97i" (format "~1,2F" (sqrt -3.9)))
+;(expect "0.00+1.97i" (format "~1,2F" (sqrt -3.9)))
 (expect "3200000.0"  (format "~8F" 32e5))
 ;(expect "   3.2e6"   (format "~8F" 32e5))
 (expect "<string>"   (format "~h") (lambda (e r) (string? r)))
@@ -100,7 +100,7 @@
 ;(expect "#1=(a b c . #1#)" (format "~w" (let ( (c '(a b c)) ) (set-cdr! (cddr c) c) c)))
 ;(expect "#0=(a b c . #0#)" (format "~w" (let ( (c (list 'a 'b 'c)) ) (set-cdr! (cddr c) c) c)))
 (expect "   32.00"   (format "~8,2F" 32))
-(expect "0.000+1.949i" (format "~8,3F" (sqrt -3.8)))
+;(expect "0.000+1.949i" (format "~8,3F" (sqrt -3.8)))
 ;(expect " 3.45e11"   (format "~8,2F" 3.4567e11))
 (expect "345670000000.00" (format "~8,2F" 3.4567e11))
 (expect " 0.333"     (format "~6,3F" 1/3))
@@ -196,7 +196,7 @@
 (expect "+nan.0"     (format "~1,1F" +nan.0))
 (expect "0.0"        (format "~1,1F" 0.0))
 (expect "-0.0"       (format "~1,1F" -0.0))
-(expect "31.41592653589793" (format "~F" (* pi 10)))
+(expect "31.4159265358979" (format "~F" (* pi 10)))
 (expect "0.33333"    (format "~1,5F"  1/3))
 (expect "-0.33333"   (format "~1,5F" -1/3))
 (expect "0.142857142857" (format "~1,12F"  1/7))
