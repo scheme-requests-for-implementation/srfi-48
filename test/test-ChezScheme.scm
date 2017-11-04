@@ -41,7 +41,7 @@
     ((cond-expand (feature-id body ...) more-clauses ...)
      (cond-expand more-clauses ...))))
 
-;; Chez's 'error' needs a first argument 'who'.
+;; R6RS's 'error' needs a first argument 'who'.
 (define error-orig error)
 (define (error . args)
   (apply error-orig 'test args))
