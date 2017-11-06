@@ -13,9 +13,7 @@
     ((_ test then)
      (when test then))
     ((_ test then else1)
-     (cond (test then) (else else1)))
-    ((_ . other)
-     (syntax-error "malformed if"))))
+     (cond (test then) (else else1)))))
 
 (include "test-tool.scm")
 (include "srfi-48.scm")
