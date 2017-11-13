@@ -12,7 +12,9 @@
 ;; 'inexact-number->string' determines whether output is fixed-point
 ;; notation or exponential notation. In the current definition,
 ;; the notation depends on the implementation of 'number->string'.
-;; 'exact-number->string' is expected not to output exponential notation.
+;; 'exact-number->string' is expected to output only numeric characters
+;; (not including such as '#', 'e', '.', '/') if the input is an positive
+;; integer or zero.
 ;; 'real-number->string' is used when the digits of ~F is not specified.
 (define (inexact-number->string x) (number->string (exact->inexact x)))
 (define (exact-number->string x)   (number->string (inexact->exact x)))
@@ -62,12 +64,6 @@
                (string-append (make-string off char) str)
                str)))
 
-         (define (string-remove-frac-part str)
-           (let ( (dot-pos (string-index str #\.)) )
-             (if dot-pos
-               (substring str 0 dot-pos)
-               str)))
-
          (define (compose-with-digits digits pre-str frac-str exp-str)
            (let ( (frac-len (string-length frac-str)) )
              (cond
@@ -91,10 +87,9 @@
                        (last-part  (substring frac-str digits frac-len))
                        (temp-str
                         (string-grow
-                         (string-remove-frac-part
-                          (exact-number->string
-                           (round (string->number
-                                   (string-append pre-str* first-part "." last-part)))))
+                         (exact-number->string
+                          (round (string->number
+                                  (string-append pre-str* first-part "." last-part))))
                          digits
                          #\0))
                        (temp-len   (string-length temp-str))
