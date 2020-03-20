@@ -28,7 +28,16 @@ Ken Dickey
       <li>Final: 2004-03-02</li>
       <li>Revised: 2005-06-01</li>
       <li><a href="errata.html">Errata</a></li>
-      </ul></p>
+      <li><b>post-finalization note</b>: On 2020-03-18, Per Bothner
+	began an email
+	<a href="https://srfi-email.schemers.org/srfi-48/msg/13511377/">discussion</a>
+	of the proper semantics of SRFI 48's freshline
+	(<code>~&amp;</code>) directive, suggesting a change when it
+	is not known whether the previous character was a newline.
+	This is not an error in the SRFI, but deviation from it that
+	Per recommends.  SRFI 48 author Ken Dickey responded with a
+	patch to the sample implementation that could be used to
+	implement Per's change, if desired.</li></ul></p>
 
 <H1>Abstract</H1>
 
