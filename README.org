@@ -6,6 +6,8 @@
 
 keywords: [[https://srfi.schemers.org/?keywords=i/o][I/O]]
 
+library-name: intermediate-format-strings
+
 This repository hosts [[https://srfi.schemers.org/srfi-48/][SRFI 48]]: Intermediate Format Strings, a [[https://srfi.schemers.org/][Scheme Request for Implementation]].
 
 This SRFI is in /final/ status.
