@@ -1,23 +1,20 @@
 <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
-<html>
+<html lang="en">
   <head>
     <title>SRFI 48: Intermediate Format Strings</title>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="stylesheet" href="/srfi.css" type="text/css" />
+    <link rel="stylesheet" href="https://srfi.schemers.org/srfi.css" type="text/css" />
+    <link href="/favicon.png" rel="icon" sizes="192x192" type="image/png">
   </head>
 
   <body>
 
-<H1>Title</H1>
+<h1><a href="https://srfi.schemers.org/"><img class="srfi-logo" src="https://srfi.schemers.org/srfi-logo.svg" alt="SRFI surfboard logo" /></a>48: Intermediate Format Strings</h1>
 
-Intermediate Format Strings
+<p>by Ken Dickey</p>
 
-<H1>Author</H1>
-
-Ken Dickey
-
-<H1>Status</H1>
+<h2>Status</h2>
 
 <p>This SRFI is currently in <em>final</em> status.  Here is <a href="https://srfi.schemers.org/srfi-process.html">an explanation</a> of each status that a SRFI can hold.  To provide input on this SRFI, please send email to <code><a href="mailto:srfi+minus+48+at+srfi+dotschemers+dot+org">srfi-48@<span class="antispam">nospam</span>srfi.schemers.org</a></code>.  To subscribe to the list, follow <a href="https://srfi.schemers.org/srfi-list-subscribe.html">these instructions</a>.  You can access previous messages via the mailing list <a href="https://srfi-email.schemers.org/srfi-48">archive</a>.</p>
 <ul>
@@ -39,14 +36,14 @@ Ken Dickey
 	patch to the sample implementation that could be used to
 	implement Per's change, if desired.</li></ul></p>
 
-<H1>Abstract</H1>
+<h2>Abstract</h2>
 
 This document specifies Format Strings, a method of interpreting a Scheme string which contains a
 number of format directives that are replaced with other string data according to the semantics of each directive.
 This SRFI extends <a href="../srfi-28/srfi-28.html">SRFI-28</a> in being more generally useful but is less general than
 advanced format strings in that it does not allow, aside from ~F, for controlled positioning of text within fields.
 
-<H1>Issues</H1>
+<h2>Issues</h2>
 
 <P>
 Some may disagree with specific escape options or return values.
@@ -71,7 +68,7 @@ As this is <B>intermediate</B> format, it was felt that ~F and ~W are too highly
 The ~H option is helpful to users, allows for programattic query, and makes clear which format directives are supported.
 </P>
 
-<H1>Rationale</H1>
+<h2>Rationale</h2>
 <P>
 Inheriting from MacLisp, nearly all Lisp and Scheme implementations support some form of
 FORMAT function with support for various numbers of format directives.
@@ -89,7 +86,7 @@ It is also useful in cases where a synoptic
 implementation of Scheme and CommonLisp is maintained.
 </P>
 
-<H1 id="format">Specification</H1>
+<h2 id="format">Specification</h2>
 
     <b><tt>format</tt></b> <tt><i>[port] format-string [obj ...]</i> </tt>
 
@@ -276,7 +273,7 @@ synopsis for each format directive, starting with the directive (e.g. "~t")
 	</p>
     </blockquote>
 <br>
-    <h2>Examples</h2>
+    <h3>Examples</h3>
 <pre>
 (format "~h")
 ; =&gt;
@@ -372,7 +369,7 @@ OPTION	[MNEMONIC]	DESCRIPTION	-- This implementation Assumes ASCII Text Encoding
 
 
 
-<H1>Implementation</H1>
+<h2>Implementation</h2>
 
     The implementation below requires SRFI-6 (Basic string ports),
     SRFI-23 (Error reporting mechanism) and
@@ -789,7 +786,7 @@ OPTION  [MNEMONIC]      DESCRIPTION     -- Implementation Assumes ASCII Text Enc
 </pre>
 
 
-<H1>Copyright</H1>
+<h2>Copyright</h2>
 <p>Copyright (C) Kenneth A Dickey (2003). All Rights Reserved.</p>
 <p>
 Permission is hereby granted, free of charge, to any person obtaining
