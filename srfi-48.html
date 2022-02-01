@@ -266,11 +266,10 @@ synopsis for each format directive, starting with the directive (e.g. "~t")
 	<pre>(format "~1,2F" 4321) =&gt; "4321.00"</pre>
 	If the number is complex, <b>d</b> is applied to both real and imaginal parts
 	<pre>(format "~1,2F" (sqrt -3.9)) =&gt; "0.00+1.97i"</pre>
-	</p><p>
+	<p>
 	For very large or very small numbers, the point where exponential notation
-	is used is implementation defined.
+	is used is implementation defined.</p>
 	<pre>(format "~8F" 32e5) =&gt; "   3.2e6" or "3200000.0"</pre>
-	</p>
     </blockquote>
 <br />
     <h3>Examples</h3>
