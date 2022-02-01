@@ -1,23 +1,20 @@
-<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
-<html>
+<!DOCTYPE html PUBLIC "-//IETF//DTD HTML//EN" "http://www.w3.org/TR/html.dtd">
+<html lang="en">
   <head>
     <title>SRFI 48: Intermediate Format Strings</title>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="stylesheet" href="/srfi.css" type="text/css" />
+    <meta content="width=device-width, initial-scale=1" name="viewport" />
+    <link href="https://srfi.schemers.org/srfi.css" rel="stylesheet" type="text/css" />
+    <link href="/favicon.png" rel="icon" sizes="192x192" type="image/png" />
   </head>
 
   <body>
 
-<H1>Title</H1>
+<h1><a href="https://srfi.schemers.org/"><img alt="SRFI surfboard logo" class="srfi-logo" src="https://srfi.schemers.org/srfi-logo.svg" /></a>48: Intermediate Format Strings</h1>
 
-Intermediate Format Strings
+<p>by Ken Dickey</p>
 
-<H1>Author</H1>
-
-Ken Dickey
-
-<H1>Status</H1>
+<h2>Status</h2>
 
 <p>This SRFI is currently in <em>final</em> status.  Here is <a href="https://srfi.schemers.org/srfi-process.html">an explanation</a> of each status that a SRFI can hold.  To provide input on this SRFI, please send email to <code><a href="mailto:srfi+minus+48+at+srfi+dotschemers+dot+org">srfi-48@<span class="antispam">nospam</span>srfi.schemers.org</a></code>.  To subscribe to the list, follow <a href="https://srfi.schemers.org/srfi-list-subscribe.html">these instructions</a>.  You can access previous messages via the mailing list <a href="https://srfi-email.schemers.org/srfi-48">archive</a>.</p>
 <ul>
@@ -37,59 +34,59 @@ Ken Dickey
 	This is not an error in the SRFI, but deviation from it that
 	Per recommends.  SRFI 48 author Ken Dickey responded with a
 	patch to the sample implementation that could be used to
-	implement Per's change, if desired.</li></ul></p>
+	implement Per's change, if desired.</li></ul>
 
-<H1>Abstract</H1>
+<h2>Abstract</h2>
 
 This document specifies Format Strings, a method of interpreting a Scheme string which contains a
 number of format directives that are replaced with other string data according to the semantics of each directive.
 This SRFI extends <a href="../srfi-28/srfi-28.html">SRFI-28</a> in being more generally useful but is less general than
 advanced format strings in that it does not allow, aside from ~F, for controlled positioning of text within fields.
 
-<H1>Issues</H1>
+<h2>Issues</h2>
 
-<P>
+<p>
 Some may disagree with specific escape options or return values.
 For those who desire complex options as implemented by SLIB
 or Common Lisp's FORMAT, an upwards compatible
 "Advanced Format" SRFI should be proposed.
-</P><P>
+</p><p>
 In particular, the reference implementation given here does not accept numeric arguments
 (aside from ~F).
 Hence it does <b>not</b> support <a href="../srfi-29/srfi-29.html">SRFI-29</a>.
-</P><P>
+</p><p>
 It is highly desireable that baseline library code be small, attempt to
 eliminiate heap allocation and bound stack usage.
 This is especially important in embedded systems.
 This can be accomplished by writing directly to a port,
 rather than a string, by not supporting ~W or ~F,
 and by replacing
-<I>(display (number->string n r) p)</I> with a carefully written
-<I>(display:number->string n r p)</I> which does not build intermediate strings.
-</P><P>
-As this is <B>intermediate</B> format, it was felt that ~F and ~W are too highly useful to elide.
+<i>(display (number-&gt;string n r) p)</i> with a carefully written
+<i>(display:number-&gt;string n r p)</i> which does not build intermediate strings.
+</p><p>
+As this is <b>intermediate</b> format, it was felt that ~F and ~W are too highly useful to elide.
 The ~H option is helpful to users, allows for programattic query, and makes clear which format directives are supported.
-</P>
+</p>
 
-<H1>Rationale</H1>
-<P>
+<h2>Rationale</h2>
+<p>
 Inheriting from MacLisp, nearly all Lisp and Scheme implementations support some form of
 FORMAT function with support for various numbers of format directives.
 By agreeing to the options here, we raise the bar for portable code.
-</P><P>
+</p><p>
 The reference implementation is R5RS compliant and easy to port.
 In not requiring advanced features (aside from ~W and ~F) small implementations are possible.
 E.g. the reference code does not use side effects (assignment) and is less than
 a third the source size of the latest SLIB implementation of FORMAT
 (less than a tenth if ~F support is elided).
-</P><P>
+</p><p>
 The optional <i>port</i> argument allows for compatibility with older code
 written for, e.g. scheme48, MIT Scheme, T, et cetera, which required a port argument.
 It is also useful in cases where a synoptic
 implementation of Scheme and CommonLisp is maintained.
-</P>
+</p>
 
-<H1>Specification</H1>
+<h2 id="format">Specification</h2>
 
     <b><tt>format</tt></b> <tt><i>[port] format-string [obj ...]</i> </tt>
 
@@ -130,8 +127,8 @@ implementation of Scheme and CommonLisp is maintained.
 <td><b>DIRECTIVE</b></td>
 <td><b>MNEMONIC</b></td>
 <td><b>ACTION</b></td>
-<td><b>CONSUMES?</b><td>
-</tr>
+<td><b>CONSUMES?</b></td><td>
+</td></tr>
 <tr>
 	<td>~a</td>
 	<td>Any</td>
@@ -224,7 +221,7 @@ implementation of Scheme and CommonLisp is maintained.
 	<td>no</td>
 </tr>
 <tr>
-	<td>~&</td>
+	<td>~&amp;</td>
 	<td>Freshline</td>
 	<td>output a newline character if it is known that the previous output was not a newline</td>
 	<td>no</td>
@@ -244,11 +241,11 @@ synopsis for each format directive, starting with the directive (e.g. "~t")
 	<td>no</td>
 </tr>
 	</table>
-<br>
+<br />
 	<p>
 	The <b>~F</b>, fixed format, directive requires some elucidation.
 	</p><p>
-	<b>~wF</b> is useful for strings or numbers.  Where the string (or number->string
+	<b>~wF</b> is useful for strings or numbers.  Where the string (or number-&gt;string
 	of the number) has fewer characters than the integer width w, the string is
 	padded on the left with space characters.
 	</p><p>
@@ -275,8 +272,8 @@ synopsis for each format directive, starting with the directive (e.g. "~t")
 	<pre>(format "~8F" 32e5) =&gt; "   3.2e6" or "3200000.0"</pre>
 	</p>
     </blockquote>
-<br>
-    <h2>Examples</h2>
+<br />
+    <h3>Examples</h3>
 <pre>
 (format "~h")
 ; =&gt;
@@ -288,7 +285,7 @@ OPTION	[MNEMONIC]	DESCRIPTION	-- This implementation Assumes ASCII Text Encoding
 ~~	[tilde]		output a tilde
 ~T	[Tab]		output a tab character
 ~%	[Newline]	output a newline character
-~&	[Freshline]	output a newline character if the previous output was not a newline
+~&amp;	[Freshline]	output a newline character if the previous output was not a newline
 ~D	[Decimal]	the arg is a number which is output in decimal radix
 ~X	[heXadecimal]	the arg is a number which is output in hexdecimal radix
 ~O	[Octal]		the arg is a number which is output in octal radix
@@ -320,7 +317,7 @@ OPTION	[MNEMONIC]	DESCRIPTION	-- This implementation Assumes ASCII Text Encoding
 (format "~a ~? ~a" 'a "~s" '(new) 'test)
 ; =&gt;"a new test"
 
-(format #f "~&1~&~&2~&~&~&3~%")
+(format #f "~&amp;1~&amp;~&amp;2~&amp;~&amp;~&amp;3~%")
 ; =&gt;
 "
 1
@@ -363,7 +360,7 @@ OPTION	[MNEMONIC]	DESCRIPTION	-- This implementation Assumes ASCII Text Encoding
 (format "~8,3F" "foo")
 ; =&gt; "     foo"
 
-(format "~a~a~&" (list->string (list #\newline)) "")
+(format "~a~a~&amp;" (list-&gt;string (list #\newline)) "")
 ; =&gt;
 "
 "
@@ -372,36 +369,36 @@ OPTION	[MNEMONIC]	DESCRIPTION	-- This implementation Assumes ASCII Text Encoding
 
 
 
-<H1>Implementation</H1>
+<h2>Implementation</h2>
 
     The implementation below requires SRFI-6 (Basic string ports),
     SRFI-23 (Error reporting mechanism) and
-    SRFI-38 (External Representation for Data With Shared Structure). <br>
+    SRFI-38 (External Representation for Data With Shared Structure). <br />
 
 
 <pre>
 
 ;; IMPLEMENTATION DEPENDENT options
 
-(define ascii-tab   (integer->char  9))  ;; NB: assumes ASCII encoding
+(define ascii-tab   (integer-&gt;char  9))  ;; NB: assumes ASCII encoding
 (define dont-print  (if (eq? #t #f) 1))
-;;(define DONT-PRINT (string->symbol ""))
+;;(define DONT-PRINT (string-&gt;symbol ""))
 ;;(define DONT-PRINT (void))
 ;;(define DONT-PRINT #!void)
 (define pretty-print   write) ; ugly but permitted
 ;; (require 'srfi-38)  ;; write-with-shared-structure
 
 ;; Following three procedures are used by format ~F .
-;; 'inexact-number->string' determines whether output is fixed-point
+;; 'inexact-number-&gt;string' determines whether output is fixed-point
 ;; notation or exponential notation. In the current definition,
-;; the notation depends on the implementation of 'number->string'.
-;; 'exact-number->string' is expected to output only numeric characters
+;; the notation depends on the implementation of 'number-&gt;string'.
+;; 'exact-number-&gt;string' is expected to output only numeric characters
 ;; (not including such as '#', 'e', '.', '/') if the input is an positive
 ;; integer or zero.
-;; 'real-number->string' is used when the digits of ~F is not specified.
-(define (inexact-number->string x) (number->string (exact->inexact x)))
-(define (exact-number->string x)   (number->string (inexact->exact x)))
-(define (real-number->string x)    (number->string x))
+;; 'real-number-&gt;string' is used when the digits of ~F is not specified.
+(define (inexact-number-&gt;string x) (number-&gt;string (exact-&gt;inexact x)))
+(define (exact-number-&gt;string x)   (number-&gt;string (inexact-&gt;exact x)))
+(define (real-number-&gt;string x)    (number-&gt;string x))
 
 ;; FORMAT
 (define (format . args)
@@ -411,7 +408,7 @@ OPTION	[MNEMONIC]	DESCRIPTION	-- This implementation Assumes ASCII Text Encoding
     )
    ((string? (car args))
     (apply format (cons #f args)))
-   ((< (length args) 2)
+   ((&lt; (length args) 2)
     (error (format #f "FORMAT: too few arguments ~s" (cons 'format args)))
     )
    (else
@@ -450,7 +447,7 @@ OPTION	[MNEMONIC]	DESCRIPTION	-- This implementation Assumes ASCII Text Encoding
          (define (compose-with-digits digits pre-str frac-str exp-str)
            (let ( (frac-len (string-length frac-str)) )
              (cond
-              ((< frac-len digits) ;; grow frac part, pad with zeros
+              ((&lt; frac-len digits) ;; grow frac part, pad with zeros
                (string-append pre-str "."
                               frac-str (make-string (- digits frac-len) #\0)
                               exp-str)
@@ -461,7 +458,7 @@ OPTION	[MNEMONIC]	DESCRIPTION	-- This implementation Assumes ASCII Text Encoding
                               exp-str)
                )
               (else ;; must round to shrink it
-               (let* ( (minus-flag (and (> (string-length pre-str) 0)
+               (let* ( (minus-flag (and (&gt; (string-length pre-str) 0)
                                         (char=? (string-ref pre-str 0) #\-)))
                        (pre-str*   (if minus-flag
                                        (substring pre-str 1 (string-length pre-str))
@@ -470,8 +467,8 @@ OPTION	[MNEMONIC]	DESCRIPTION	-- This implementation Assumes ASCII Text Encoding
                        (last-part  (substring frac-str digits frac-len))
                        (temp-str
                         (string-grow
-                         (exact-number->string
-                          (round (string->number
+                         (exact-number-&gt;string
+                          (round (string-&gt;number
                                   (string-append pre-str* first-part "." last-part))))
                          digits
                          #\0))
@@ -483,10 +480,10 @@ OPTION	[MNEMONIC]	DESCRIPTION	-- This implementation Assumes ASCII Text Encoding
                   (if minus-flag "-" "")
                   (if (string=? new-pre "")
                       ;; check if the system displays integer part of numbers
-                      ;; whose absolute value is 0 < x < 1.
+                      ;; whose absolute value is 0 &lt; x &lt; 1.
                       (if (and (string=? pre-str* "")
-                               (> digits 0)
-                               (not (= (string->number new-frac) 0)))
+                               (&gt; digits 0)
+                               (not (= (string-&gt;number new-frac) 0)))
                           "" "0")
                       new-pre)
                   "."
@@ -514,7 +511,7 @@ OPTION	[MNEMONIC]	DESCRIPTION	-- This implementation Assumes ASCII Text Encoding
                   #\space)
                  )
                 (digits
-                 (let* ( (num-str   (inexact-number->string real))
+                 (let* ( (num-str   (inexact-number-&gt;string real))
                          (dot-index (string-index  num-str #\.))
                          (exp-index (string-index  num-str #\e))
                          (length    (string-length num-str))
@@ -550,7 +547,7 @@ OPTION	[MNEMONIC]	DESCRIPTION	-- This implementation Assumes ASCII Text Encoding
                         #\space))
                  ))
                 (else ;; no digits
-                 (string-grow (real-number->string real) width #\space)))
+                 (string-grow (real-number-&gt;string real) width #\space)))
              ))
             (else
              (error
@@ -567,7 +564,7 @@ OPTION  [MNEMONIC]      DESCRIPTION     -- Implementation Assumes ASCII Text Enc
 ~~      [tilde]         output a tilde
 ~T      [Tab]           output a tab character
 ~%      [Newline]       output a newline character
-~&      [Freshline]     output a newline character if the previous output was not a newline
+~&amp;      [Freshline]     output a newline character if the previous output was not a newline
 ~D      [Decimal]       the arg is a number which is output in decimal radix
 ~X      [heXadecimal]   the arg is a number which is output in hexdecimal radix
 ~O      [Octal]         the arg is a number which is output in octal radix
@@ -593,7 +590,7 @@ OPTION  [MNEMONIC]      DESCRIPTION     -- Implementation Assumes ASCII Text Enc
 
              (anychar-dispatch
               (lambda (pos arglist last-was-newline)
-                (if (>= pos length-of-format-string)
+                (if (&gt;= pos length-of-format-string)
                   arglist ; return unused args
                   (let ( (char (string-ref format-strg pos)) )
                     (cond
@@ -619,7 +616,7 @@ OPTION  [MNEMONIC]      DESCRIPTION     -- Implementation Assumes ASCII Text Enc
              (tilde-dispatch
               (lambda (pos arglist last-was-newline)
                 (cond
-                 ((>= pos length-of-format-string)
+                 ((&gt;= pos length-of-format-string)
                   (write-char #\~ port) ; tilde at end of string is just output
                   arglist ; return unused args
                   )
@@ -651,22 +648,22 @@ OPTION  [MNEMONIC]      DESCRIPTION     -- Implementation Assumes ASCII Text Enc
                      ))
                     ((#\D)       ; Decimal
                      (require-an-arg arglist)
-                     (display (number->string (car arglist) 10) port)
+                     (display (number-&gt;string (car arglist) 10) port)
                      (anychar-dispatch (+ pos 1) (cdr arglist) #f)
                      )
                     ((#\X)       ; HeXadecimal
                      (require-an-arg arglist)
-                     (display (number->string (car arglist) 16) port)
+                     (display (number-&gt;string (car arglist) 16) port)
                      (anychar-dispatch (+ pos 1) (cdr arglist) #f)
                      )
                     ((#\O)       ; Octal
                      (require-an-arg arglist)
-                     (display (number->string (car arglist)  8) port)
+                     (display (number-&gt;string (car arglist)  8) port)
                      (anychar-dispatch (+ pos 1) (cdr arglist) #f)
                      )
                     ((#\B)       ; Binary
                      (require-an-arg arglist)
-                     (display (number->string (car arglist)  2) port)
+                     (display (number-&gt;string (car arglist)  2) port)
                      (anychar-dispatch (+ pos 1) (cdr arglist) #f)
                      )
                     ((#\C)       ; Character
@@ -682,7 +679,7 @@ OPTION  [MNEMONIC]      DESCRIPTION     -- Implementation Assumes ASCII Text Enc
                      (newline port)
                      (anychar-dispatch (+ pos 1) arglist #t)
                      )
-                    ((#\&)      ; Freshline
+                    ((#\&amp;)      ; Freshline
                      (if (not last-was-newline) ;; (unless last-was-newline ..
                          (newline port))
                      (anychar-dispatch (+ pos 1) arglist #t)
@@ -710,7 +707,7 @@ OPTION  [MNEMONIC]      DESCRIPTION     -- Implementation Assumes ASCII Text Enc
                                  (d-digits '())
                                  (in-width? #t)
                                )
-                       (if (>= index length-of-format-string)
+                       (if (&gt;= index length-of-format-string)
                            (error
                             (format "FORMAT: improper numeric format directive in ~s" format-strg))
                            (let ( (next-char (string-ref format-strg index)) )
@@ -727,10 +724,10 @@ OPTION  [MNEMONIC]      DESCRIPTION     -- Implementation Assumes ASCII Text Enc
                                          in-width?))
                                )
                               ((char=? (char-upcase next-char) #\F)
-                               (let ( (width  (string->number (list->string (reverse w-digits))))
+                               (let ( (width  (string-&gt;number (list-&gt;string (reverse w-digits))))
                                       (digits (if (zero? (length d-digits))
                                                   #f
-                                                  (string->number (list->string (reverse d-digits)))))
+                                                  (string-&gt;number (list-&gt;string (reverse d-digits)))))
                                     )
                                  (display (format-fixed (car arglist) width digits) port)
                                  (anychar-dispatch (+ index 1) (cdr arglist) #f))
@@ -749,7 +746,7 @@ OPTION  [MNEMONIC]      DESCRIPTION     -- Implementation Assumes ASCII Text Enc
                      ))
                     ((#\? #\K)       ; indirection -- take next arg as format string
                      (cond           ;  and following arg as list of format args
-                      ((< (length arglist) 2)
+                      ((&lt; (length arglist) 2)
                        (error
                         (format "FORMAT: less arguments than specified for ~~?: ~s" arglist))
                        )
@@ -789,7 +786,7 @@ OPTION  [MNEMONIC]      DESCRIPTION     -- Implementation Assumes ASCII Text Enc
 </pre>
 
 
-<H1>Copyright</H1>
+<h2>Copyright</h2>
 <p>Copyright (C) Kenneth A Dickey (2003). All Rights Reserved.</p>
 <p>
 Permission is hereby granted, free of charge, to any person obtaining
@@ -814,9 +811,9 @@ OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 </p>
 
-    <hr>
+    <hr />
     <address>Author: <a href="mailto:Ken.Dickey@allvantage.com">Ken Dickey</a></address>
-    <address>Editor: <a href="mailto:srfi minus editors at srfi dot schemers dot org">Francisco Solsona</a></address>
+    <address>Editor: <a href="mailto:srfi%20minus%20editors%20at%20srfi%20dot%20schemers%20dot%20org">Francisco Solsona</a></address>
 <!-- Created: Tue Sep 29 19:20:08 EDT 1998 -->
 <!-- hhmts start -->
 Last modified: Sun Jan 28 13:40:35 MET 2007
