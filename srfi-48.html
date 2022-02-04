@@ -37,11 +37,12 @@
 	implement Per's change, if desired.</li></ul>
 
 <h2>Abstract</h2>
-
+<p>
 This document specifies Format Strings, a method of interpreting a Scheme string which contains a
 number of format directives that are replaced with other string data according to the semantics of each directive.
 This SRFI extends <a href="../srfi-28/srfi-28.html">SRFI-28</a> in being more generally useful but is less general than
 advanced format strings in that it does not allow, aside from ~F, for controlled positioning of text within fields.
+</p>
 
 <h2>Issues</h2>
 
@@ -248,27 +249,39 @@ synopsis for each format directive, starting with the directive (e.g. "~t")
 	<b>~wF</b> is useful for strings or numbers.  Where the string (or number-&gt;string
 	of the number) has fewer characters than the integer width w, the string is
 	padded on the left with space characters.
-	</p><p>
+	</p>
+        <p>
 	<b>~w,dF</b> is typically used only on numbers.  For strings, the <b>d</b>
 	specifier is ignored. For numbers, the integer <b>d</b> specifies the number
 	of decimal digits after the decimal place.  Both <b>w</b> and <b>d</b> must be
 	zero or positive.
-	</p><p>
+	</p>
+        <p>
 	If <b>d</b> is specified, the number is processed
 	as if added to 0.0, i.e. it is converted to an inexact value.
+        </p>
 	<pre>(format "~8,2F" 1/3) =&gt; "    0.33"</pre>
+        <p>
 	If no <b>d</b> is specified, the number is <i>not</i> coerced to inexact.
-	<pre>(format "~6F" 32) =&gt; "    32"</pre>
-	Digits are padded to the right with zeros
-	<pre>(format "~8,2F" 32) =&gt; "   32.00"</pre>
+	</p>
+        <pre>(format "~6F" 32) =&gt; "    32"</pre>
+        <p>
+        Digits are padded to the right with zeros
+	</p>
+        <pre>(format "~8,2F" 32) =&gt; "   32.00"</pre>
+        <p>
 	If the number it too large to fit in the width specified,
 	a string longer than the width is returned
-	<pre>(format "~1,2F" 4321) =&gt; "4321.00"</pre>
+	</p>
+        <pre>(format "~1,2F" 4321) =&gt; "4321.00"</pre>
+        <p>
 	If the number is complex, <b>d</b> is applied to both real and imaginal parts
+        </p>
 	<pre>(format "~1,2F" (sqrt -3.9)) =&gt; "0.00+1.97i"</pre>
 	<p>
 	For very large or very small numbers, the point where exponential notation
-	is used is implementation defined.</p>
+	is used is implementation defined.
+        </p>
 	<pre>(format "~8F" 32e5) =&gt; "   3.2e6" or "3200000.0"</pre>
     </blockquote>
 <br />
