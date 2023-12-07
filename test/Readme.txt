@@ -1,3 +1,8 @@
+<!--
+SPDX-FileCopyrightText: 2003 Kenneth A Dickey <ken.dickey@allvantage.com>
+
+SPDX-License-Identifier: MIT
+-->
 == srfi-48 format test ==
 
 

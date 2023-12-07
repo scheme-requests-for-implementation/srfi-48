@@ -1,3 +1,8 @@
+;;; SPDX-FileCopyrightText: 2003 Kenneth A Dickey <ken.dickey@allvantage.com>
+;;; SPDX-FileCopyrightText: 2017 Hamayama <hamay1010@gmail.com>
+;;;
+;;; SPDX-License-Identifier: MIT
+
 ;; IMPLEMENTATION DEPENDENT options
 
 (define ascii-tab   (integer->char  9))  ;; NB: assumes ASCII encoding

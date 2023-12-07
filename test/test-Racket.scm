@@ -1,3 +1,7 @@
+;;; SPDX-FileCopyrightText: 2017 Hamayama <hamay1010@gmail.com>
+;;;
+;;; SPDX-License-Identifier: MIT
+
 #lang racket
 
 ;;
