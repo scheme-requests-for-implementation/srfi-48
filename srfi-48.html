@@ -266,16 +266,16 @@ synopsis for each format directive, starting with the directive (e.g. "~t")
 	</p>
         <pre>(format "~6F" 32) =&gt; "    32"</pre>
         <p>
-        Digits are padded to the right with zeros
+        Digits are padded to the right with zeros.
 	</p>
         <pre>(format "~8,2F" 32) =&gt; "   32.00"</pre>
         <p>
-	If the number it too large to fit in the width specified,
-	a string longer than the width is returned
+	If the number is too large to fit in the width specified, a
+	string longer than the width is returned.
 	</p>
         <pre>(format "~1,2F" 4321) =&gt; "4321.00"</pre>
         <p>
-	If the number is complex, <b>d</b> is applied to both real and imaginal parts
+	If the number is complex, <b>d</b> is applied to both real and imaginal parts.
         </p>
 	<pre>(format "~1,2F" (sqrt -3.9)) =&gt; "0.00+1.97i"</pre>
 	<p>
