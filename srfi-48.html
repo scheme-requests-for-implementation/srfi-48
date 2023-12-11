@@ -81,7 +81,7 @@ E.g. the reference code does not use side effects (assignment) and is less than
 a third the source size of the latest SLIB implementation of FORMAT
 (less than a tenth if ~F support is elided).
 </p><p>
-The optional <i>port</i> argument allows for compatibility with older code
+The optional <var>port</var> argument allows for compatibility with older code
 written for, e.g. scheme48, MIT Scheme, T, et cetera, which required a port argument.
 It is also useful in cases where a synoptic
 implementation of Scheme and CommonLisp is maintained.
@@ -92,36 +92,41 @@ implementation of Scheme and CommonLisp is maintained.
     <b><tt>format</tt></b> <tt><i>[port] format-string [obj ...]</i> </tt>
 
     <blockquote>
-      <p>Accepts a format template (a Scheme String), and
-      processes it, replacing any format directives in order with
-      one or more characters, the characters themselves dependent
-      on the semantics of the format directive encountered.  Each directive
-      may consume one obj. It is an error if fewer or more obj values are
-      provided than format directives that require them.</p>
+      <p>Accepts a format template (a Scheme String), and processes
+      it, replacing any format directives in order with one or more
+      characters, the characters themselves dependent on the semantics
+      of the format directive encountered. Each directive may consume
+      one <var>obj</var>. It is an error if fewer or
+      more <var>obj</var> values are provided than format directives
+      that require them.</p>
 
-      <p>When a <i>port</i> is specified it must be either an output port or
-      a boolean.  If an output-port is specified, the formatted output is
-      output into that port.  If the port argument is #t, output is to the
-      current-output-port.  If the port is #f or no port is specified, the
-      output is returned as a string.  If the port is specified and is #t
-      or an output-port, the result of the format function is unspecified.</p>
+      <p>When <var>port</var> is specified it must be either an output
+      port or a boolean. If an output port is specified, the formatted
+      output is output into that port. If the <var>port</var> argument
+      is <code>#t</code>, output is to
+      the <code>current-output-port</code>. If <var>port</var>
+      is <code>#f</code> or no port is specified, the output is
+      returned as a string. If <var>port</var> is specified and
+      is <code>#t</code> or an output port, the result of the format
+      function is unspecified.</p>
 
       <p>It is unspecified which encoding is used (e.g. ASCII, EBCDIC, UNICODE).
       A given implementation must specify which encoding is used.
       The implementation may or may not allow the encoding to be selected or changed.</p>
 
-      <p>It is an error if an format directive consumes an <i>obj</i> argument and
-      that argument does not
-      confirm to a required type as noted in the table below.</p>
+      <p>It is an error if a format directive consumes
+      an <var>obj</var> argument and that argument does not confirm to
+      a required type as noted in the table below.</p>
 
-      <p>It is permissible, but highly discouraged, to implement pretty-print as
-      <i>(define pretty-print write)</i>.</p>
+      <p>It is permissible, but highly discouraged, to implement
+      <code>pretty-print</code> as <code>(define pretty-print
+      write)</code>.</p>
 
-      <p>An format directive is a two character sequence in the
-      string where the first character is a tilde '~'. Directive characters
-      are case-independent, i.e. upper and lower case characters
-      are interpreted the same.  Each directive
-      code's meaning is described in the following table:</p>
+      <p>A format directive is a two character sequence in the string
+      where the first character is a tilde '~'. Directive characters
+      are case-independent, i.e. upper and lower case characters are
+      interpreted the same.  Each directive code's meaning is
+      described in the following table:</p>
 
       <table>
 <tr>
@@ -246,8 +251,9 @@ synopsis for each format directive, starting with the directive (e.g. "~t")
 	<p>
 	The <b>~F</b>, fixed format, directive requires some elucidation.
 	</p><p>
-	<b>~wF</b> is useful for strings or numbers.  Where the string (or number-&gt;string
-	of the number) has fewer characters than the integer width w, the string is
+	<b>~wF</b> is useful for strings or numbers.  Where the string
+	(or <code>number-&gt;string</code> of the number) has fewer
+	characters than the integer width <b>w</b>, the string is
 	padded on the left with space characters.
 	</p>
         <p>
