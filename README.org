@@ -1,5 +1,5 @@
 
-# SPDX-FileCopyrightText: 2024 Ken Dickey
+# SPDX-FileCopyrightText: 2024 Arthur A. Gleckler
 # SPDX-License-Identifier: MIT
 * SRFI 48: Intermediate Format Strings
 
