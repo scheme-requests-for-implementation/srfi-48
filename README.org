@@ -1,5 +1,5 @@
 
-# SPDX-FileCopyrightText: 2024 Arthur A. Gleckler
+# SPDX-FileCopyrightText: 2025 Arthur A. Gleckler
 # SPDX-License-Identifier: MIT
 * SRFI 48: Intermediate Format Strings
 
@@ -7,7 +7,7 @@
 
 
 
-keywords: [[https://srfi.schemers.org/?keywords=i/o][I/O]]
+keywords: [[https://srfi.schemers.org/?keywords=i/o][I/O]], [[https://srfi.schemers.org/?keywords=text][Text]]
 
 library-name: intermediate-format-strings
 
